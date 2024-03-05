@@ -136,3 +136,18 @@ class TestAccountService(TestCase):
         assert(isinstance(response.get_json(), list))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         assert(len(response.get_json()), 5)
+
+
+    def test_read_an_account(self):
+        """ It should return empty list if not account else an account object and 200_Ok reponse"""
+        # no account case
+        response = self.client.get(BASE_URL)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.get_json(), [])
+
+        # one ore more accounts case
+        account = self._create_accounts(1)[0]
+        response = self.client.get(f"{BASE_URL}/{account.id}", content_type="application/json")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        assert(isinstance(response.get_json(), dict))
+        assert(response.get_json()['name'], account.name)
