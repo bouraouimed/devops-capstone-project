@@ -123,4 +123,16 @@ class TestAccountService(TestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
 
-    # ADD YOUR TEST CASES HERE ...
+    def test_list_all_accounts(self):
+        """ It should return empty list if not account else list of dict and 200_OK as response_code"""
+        # no account case
+        response = self.client.get(BASE_URL)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.get_json(), [])
+
+        # one ore more accounts case
+        self._create_accounts(5)
+        response = self.client.get(BASE_URL)
+        assert(isinstance(response.get_json(), list))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        assert(len(response.get_json()), 5)
