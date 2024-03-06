@@ -84,6 +84,7 @@ class TestAccountService(TestCase):
         self.assertEqual(response.headers.get('X-Content-Type-Options'), 'nosniff')
         self.assertEqual(response.headers.get('Content-Security-Policy'),'default-src \'self\'; object-src \'none\'')
         self.assertEqual(response.headers.get('Referrer-Policy'), 'strict-origin-when-cross-origin')
+        self.assertEqual(response.headers.get('Access-Control-Allow-Origin'), '*')
 
     def test_health(self):
         """It should be healthy"""
