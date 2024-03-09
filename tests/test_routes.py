@@ -22,6 +22,7 @@ BASE_URL = "/accounts"
 
 HTTPS_ENVIRON = {'wsgi.url_scheme': 'https'}
 
+
 ######################################################################
 #  T E S T   C A S E S
 ######################################################################
@@ -82,7 +83,7 @@ class TestAccountService(TestCase):
         response = self.client.get("/", environ_overrides=HTTPS_ENVIRON)
         self.assertEqual(response.headers.get('X-Frame-Options'), 'SAMEORIGIN')
         self.assertEqual(response.headers.get('X-Content-Type-Options'), 'nosniff')
-        self.assertEqual(response.headers.get('Content-Security-Policy'),'default-src \'self\'; object-src \'none\'')
+        self.assertEqual(response.headers.get('Content-Security-Policy'), 'default-src \'self\'; object-src \'none\'')
         self.assertEqual(response.headers.get('Referrer-Policy'), 'strict-origin-when-cross-origin')
         self.assertEqual(response.headers.get('Access-Control-Allow-Origin'), '*')
 
@@ -142,8 +143,7 @@ class TestAccountService(TestCase):
         response = self.client.get(BASE_URL)
         assert(isinstance(response.get_json(), list))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        assert(len(response.get_json()), 5)
-
+        assert len(response.get_json()), 5
 
     def test_read_an_account(self):
         """ It should return empty list if not account else an account object and 200_Ok reponse"""
@@ -157,7 +157,7 @@ class TestAccountService(TestCase):
         response = self.client.get(f"{BASE_URL}/{account.id}", content_type="application/json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         assert(isinstance(response.get_json(), dict))
-        assert(response.get_json()['name'], account.name)
+        assert response.get_json()['name'], account.name
 
     def test_update_an_account(self):
         """test if an Update to existing Account is successfully performed"""
@@ -165,7 +165,6 @@ class TestAccountService(TestCase):
         account = AccountFactory()
         resp = self.client.post(BASE_URL, json=account.serialize())
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
-        
         # update the account
         new_account = resp.get_json()
         new_account["name"] = "new account name"
